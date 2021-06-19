@@ -21,6 +21,9 @@ class CreateUsersTable extends Migration
             $table->timestamp('email_verified_at')
                   ->nullable();
             $table->string('password');
+            $table->rememberToken();
+            $table->foreignId('current_team_id')
+                  ->nullable();
             $table->string('phone')
                   ->nullable();
             $table->enum('gender', ['laki-laki', 'perempuan'])
@@ -36,7 +39,6 @@ class CreateUsersTable extends Migration
             $table->string('path_image')
                   ->nullable();
             $table->unsignedBigInteger('role_id');
-            $table->rememberToken();
             $table->timestamps();
         });
     }
