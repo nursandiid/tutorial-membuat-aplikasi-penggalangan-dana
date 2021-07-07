@@ -36,7 +36,7 @@
                 @if (auth()->user()->hasRole('admin') || auth()->user()->hasRole('donatur'))
                 <li class="nav-header">MASTER</li>
                 <li class="nav-item">
-                    <a href="pages/widgets.html" class="nav-link">
+                    <a href="{{ route('category.index') }}" class="nav-link">
                         <i class="nav-icon fas fa-cube"></i>
                         <p>
                             Kategori

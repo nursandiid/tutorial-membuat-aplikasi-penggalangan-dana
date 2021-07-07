@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\{
+    CategoryController,
     DashboardController
 };
 use Illuminate\Support\Facades\Route;
@@ -29,7 +30,7 @@ Route::group([
     Route::group([
         'middleware' => 'role:admin'
     ], function () {
-        //
+        Route::resource('/category', CategoryController::class);
     });
     
     Route::group([
