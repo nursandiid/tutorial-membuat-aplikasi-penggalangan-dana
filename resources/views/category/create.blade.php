@@ -12,18 +12,21 @@
     <div class="col-lg-12">
         <form action="{{ route('category.store') }}" method="post">
             @csrf
-            <div class="card">
-                <div class="card-body">
-                    <div class="form-group row">
-                        <label for="name">Nama</label>
-                        <input type="text" class="form-control" name="name" required>
+            <x-card>
+                <div class="form-group row">
+                    <label for="name">Nama</label>
+                    <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required>
+                    @error('name')
+                    <div class="invalid-feedback">
+                        {{ $message }}
                     </div>
+                    @enderror
                 </div>
-                <div class="card-footer">
-                    <button class="btn btn-dark">Reset</button>
+                <x-slot name="footer">
+                    <button type="reset" class="btn btn-dark">Reset</button>
                     <button class="btn btn-primary">Simpan</button>
-                </div>
-            </div>
+                </x-slot>
+            </x-card>
         </form>
     </div>
 </div>
