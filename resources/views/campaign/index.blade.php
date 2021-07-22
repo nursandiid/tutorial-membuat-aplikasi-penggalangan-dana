@@ -184,6 +184,14 @@
     function resetForm(selector) {
         $(selector)[0].reset();
 
+        if ($(`${selector} .summernote`).length != 0) {
+            $('.summernote').summernote('code', '');
+        }
+
+        if ($(`${selector} .img-thumbnail`).length != 0) {
+            $(`${selector} .img-thumbnail`).attr('src', "");
+        }
+
         $('.select2').trigger('change');
         $('.form-control, .custom-select, [type=radio], [type=checkbox], [type=file], .select2, .note-edito').removeClass('is-invalid');
         $('.invalid-feedback').remove();
