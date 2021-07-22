@@ -27,6 +27,15 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('/AdminLTE/dist/css/adminlte.min.css') }}">
 
+    <style>
+        .note-editor {
+            margin-bottom: 0;
+        }
+        .note-editor.is-invalid {
+            border-color: var(--danger);
+        }
+    </style>
+
     @stack('css')
 </head>
 
