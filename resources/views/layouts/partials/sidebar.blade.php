@@ -45,7 +45,7 @@
                 </li>
                 <li class="nav-item">
                     <a href="{{ route('campaign.index') }}" class="nav-link {{ request()->is('campaign*') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-th-large"></i>
+                        <i class="nav-icon fas fa-folder"></i>
                         <p>
                             Projek
                         </p>
@@ -71,7 +71,6 @@
                 @endif
 
                 @if (auth()->user()->hasRole('admin'))
-                <li class="nav-header">INFORMASI</li>
                 <li class="nav-item">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-envelope"></i>
@@ -94,7 +93,7 @@
                 <li class="nav-header">REPORT</li>
                 <li class="nav-item">
                     <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-chart-line"></i>
+                        <i class="nav-icon fas fa-chart-bar"></i>
                         <p>
                             Laporan
                         </p>
@@ -114,13 +113,13 @@
                 </li>
                 @endif
 
-                <li class="nav-header">PENGATURAN</li>
+                <li class="nav-header">SISTEM</li>
                 @if (auth()->user()->hasRole('admin'))
                 <li class="nav-item">
                     <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-cog"></i>
+                        <i class="nav-icon fas fa-cogs"></i>
                         <p>
-                            Setting
+                            Pengaturan
                         </p>
                     </a>
                 </li>
