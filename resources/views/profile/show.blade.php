@@ -1,45 +1,31 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Profile') }}
-        </h2>
-    </x-slot>
+@extends('layouts.app')
 
-    <div>
-        <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
-            @if (Laravel\Fortify\Features::canUpdateProfileInformation())
-                @livewire('profile.update-profile-information-form')
+@section('title', 'Profil')
+@section('breadcrumb')
+    @parent
+    <li class="breadcrumb-item active">Profil</li>
+@endsection
 
-                <x-jet-section-border />
-            @endif
-
-            @if (Laravel\Fortify\Features::enabled(Laravel\Fortify\Features::updatePasswords()))
-                <div class="mt-10 sm:mt-0">
-                    @livewire('profile.update-password-form')
-                </div>
-
-                <x-jet-section-border />
-            @endif
-
-            @if (Laravel\Fortify\Features::canManageTwoFactorAuthentication())
-                <div class="mt-10 sm:mt-0">
-                    @livewire('profile.two-factor-authentication-form')
-                </div>
-
-                <x-jet-section-border />
-            @endif
-
-            <div class="mt-10 sm:mt-0">
-                @livewire('profile.logout-other-browser-sessions-form')
+@section('content')
+<div class="row">
+    <div class="col-lg-12">
+        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link @if (request('pills') != 'password') active @endif" href="{{ route('profile.show') }}">Profil</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link @if (request('pills') == 'password') active @endif" href="{{ route('profile.show') }}?pills=password">Password</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="pills-tabContent">
+            <div class="tab-pane fade @if (request('pills') != 'password') show active @endif" id="pills-profil" role="tabpanel" aria-labelledby="pills-profil-tab">
+                @includeIf('profile.update-profile-information-form')
             </div>
-
-            @if (Laravel\Jetstream\Jetstream::hasAccountDeletionFeatures())
-                <x-jet-section-border />
-
-                <div class="mt-10 sm:mt-0">
-                    @livewire('profile.delete-user-form')
-                </div>
-            @endif
+            <div class="tab-pane fade @if (request('pills') == 'password') show active @endif" id="pills-password" role="tabpanel" aria-labelledby="pills-password-tab">
+                @includeIf('profile.update-password-form')
+            </div>
         </div>
     </div>
-</x-app-layout>
+</div>
+
+@endsection

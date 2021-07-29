@@ -1,79 +1,126 @@
-<x-jet-form-section submit="updateProfileInformation">
-    <x-slot name="title">
-        {{ __('Profile Information') }}
-    </x-slot>
+<form action="{{ route('user-profile-information.update') }}" method="post" enctype="multipart/form-data">
+    @csrf
+    @method('put')
 
-    <x-slot name="description">
-        {{ __('Update your account\'s profile information and email address.') }}
-    </x-slot>
-
-    <x-slot name="form">
-        <!-- Profile Photo -->
-        @if (Laravel\Jetstream\Jetstream::managesProfilePhotos())
-            <div x-data="{photoName: null, photoPreview: null}" class="col-span-6 sm:col-span-4">
-                <!-- Profile Photo File Input -->
-                <input type="file" class="hidden"
-                            wire:model="photo"
-                            x-ref="photo"
-                            x-on:change="
-                                    photoName = $refs.photo.files[0].name;
-                                    const reader = new FileReader();
-                                    reader.onload = (e) => {
-                                        photoPreview = e.target.result;
-                                    };
-                                    reader.readAsDataURL($refs.photo.files[0]);
-                            " />
-
-                <x-jet-label for="photo" value="{{ __('Photo') }}" />
-
-                <!-- Current Profile Photo -->
-                <div class="mt-2" x-show="! photoPreview">
-                    <img src="{{ $this->user->profile_photo_url }}" alt="{{ $this->user->name }}" class="rounded-full h-20 w-20 object-cover">
+    <x-card>
+        <div class="row justify-content-center">
+            <div class="col-lg-4">
+                <div class="text-center">
+                    <img src="{{ url(auth()->user()->path_image ?? '') }}" alt="" class="img-thumbnail preview-path_image" width="200">
                 </div>
-
-                <!-- New Profile Photo Preview -->
-                <div class="mt-2" x-show="photoPreview">
-                    <span class="block rounded-full w-20 h-20"
-                          x-bind:style="'background-size: cover; background-repeat: no-repeat; background-position: center center; background-image: url(\'' + photoPreview + '\');'">
-                    </span>
+                <div class="form-group mt-3">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="path_image" name="path_image"
+                            onchange="preview('.preview-path_image', this.files[0])">
+                        <label class="custom-file-label" for="path_image">Choose file</label>
+                    </div>
                 </div>
-
-                <x-jet-secondary-button class="mt-2 mr-2" type="button" x-on:click.prevent="$refs.photo.click()">
-                    {{ __('Select A New Photo') }}
-                </x-jet-secondary-button>
-
-                @if ($this->user->profile_photo_path)
-                    <x-jet-secondary-button type="button" class="mt-2" wire:click="deleteProfilePhoto">
-                        {{ __('Remove Photo') }}
-                    </x-jet-secondary-button>
-                @endif
-
-                <x-jet-input-error for="photo" class="mt-2" />
             </div>
-        @endif
-
-        <!-- Name -->
-        <div class="col-span-6 sm:col-span-4">
-            <x-jet-label for="name" value="{{ __('Name') }}" />
-            <x-jet-input id="name" type="text" class="mt-1 block w-full" wire:model.defer="state.name" autocomplete="name" />
-            <x-jet-input-error for="name" class="mt-2" />
         </div>
 
-        <!-- Email -->
-        <div class="col-span-6 sm:col-span-4">
-            <x-jet-label for="email" value="{{ __('Email') }}" />
-            <x-jet-input id="email" type="email" class="mt-1 block w-full" wire:model.defer="state.email" />
-            <x-jet-input-error for="email" class="mt-2" />
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="form-group">
+                    <label for="name">Nama</label>
+                    <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" id="name" 
+                        value="{{ old('name') ?? auth()->user()->name }}">
+                    @error('name')
+                    <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" class="form-control @error('email') is-invalid @enderror" name="email" id="email" 
+                        value="{{ old('email') ?? auth()->user()->email }}">
+                    @error('name')
+                    <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <label for="role">Role</label>
+                <input type="text" class="form-control @error('role') is-invalid @enderror" name="role" id="role" 
+                    value="{{ old('role') ?? auth()->user()->role->name }}" disabled>
+                @error('role')
+                <span class="invalid-feedback">{{ $message }}</span>
+                @enderror
+            </div>
         </div>
-    </x-slot>
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="form-group">
+                    <label for="phone">No. Telp</label>
+                    <input type="text" class="form-control @error('phone') is-invalid @enderror" name="phone" id="phone" 
+                        value="{{ old('phone') ?? auth()->user()->phone }}">
+                    @error('phone')
+                    <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="form-group">
+                    <label for="gender">Jenis Kelamin</label>
+                    <select class="form-control @error('gender') is-invalid @enderror" name="gender" id="gender" 
+                        value="{{ old('gender') ?? auth()->user()->gender }}">
+                        <option selected disabled>Pilih salah satu</option>
+                        <option value="laki-laki" {{ auth()->user()->gender == 'laki-laki' ? 'selected' : '' }}>Laki-laki</option>
+                        <option value="perempuan" {{ auth()->user()->gender == 'perempuan' ? 'selected' : '' }}>Perempuan</option>
+                    </select>
+                    @error('gender')
+                    <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="form-group">
+                    <label for="birth_date">Tgl Lahir</label>
+                    <div class="input-group datepicker" id="birth_date" data-target-input="nearest">
+                        <input type="text" name="birth_date" class="form-control datetimepicker-input @error('birth_date') is-invalid @enderror" data-target="#birth_date" 
+                            value="{{ old('birth_date') ?? auth()->user()->birth_date }}"/>
+                        <div class="input-group-append" data-target="#birth_date" data-toggle="datetimepicker">
+                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        </div>
+                    </div>
+                    @error('birth_date')
+                    <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="form-group">
+                    <label for="job">Pekerjaan</label>
+                    <input type="text" class="form-control @error('job') is-invalid @enderror" name="job" id="job" 
+                        value="{{ old('job') ?? auth()->user()->job }}">
+                    @error('job')
+                    <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="address">Alamat</label>
+            <textarea class="form-control @error('address') is-invalid @enderror" name="address" id="address">{{ old('address') ?? auth()->user()->address }}</textarea>
+            @error('address')
+            <span class="invalid-feedback">{{ $message }}</span>
+            @enderror
+        </div>
+        <div class="form-group">
+            <label for="about">Tentang</label>
+            <textarea class="form-control @error('about') is-invalid @enderror" name="about" id="about">{{ old('about') ?? auth()->user()->about }}</textarea>
+            @error('about')
+            <span class="invalid-feedback">{{ $message }}</span>
+            @enderror
+        </div>
 
-    <x-slot name="actions">
-        <x-jet-action-message class="mr-3" on="saved">
-            {{ __('Saved.') }}
-        </x-jet-action-message>
+        <x-slot name="footer">
+            <button type="reset" class="btn btn-dark">Reset</button>
+            <button class="btn btn-primary">Simpan</button>
+        </x-slot>
+    </x-card>
+</form>
 
-        <x-jet-button wire:loading.attr="disabled" wire:target="photo">
-            {{ __('Save') }}
-        </x-jet-button>
-    </x-slot>
-</x-jet-form-section>
+@includeIf('includes.datepicker')

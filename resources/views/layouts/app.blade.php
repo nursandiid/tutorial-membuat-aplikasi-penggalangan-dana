@@ -149,6 +149,7 @@
         }
     </script>
 
+    <x-toast />
     @stack('scripts')
 </body>
 
