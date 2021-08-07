@@ -1,10 +1,10 @@
-<form action="{{ route('setting.update', $setting->id) }}" method="post" enctype="multipart/form-data">
+<form action="{{ route('setting.update', $setting->id) }}" method="post">
     @csrf
     @method('put')
 
     <x-card>
         <div class="row">
-            <div class="col-lg-6">
+            <div class="col-lg-4">
                 <div class="form-group">
                     <label for="email">Email</label>
                     <input type="email" class="form-control @error('email') is-invalid @enderror" name="email" id="email"
@@ -14,12 +14,22 @@
                     @enderror
                 </div>
             </div>
-            <div class="col-lg-6">
+            <div class="col-lg-4">
                 <div class="form-group">
                     <label for="phone">No. Telp</label>
                     <input type="text" class="form-control @error('phone') is-invalid @enderror" name="phone" id="phone" 
                         value="{{ old('phone') ?? $setting->phone }}">
                     @error('phone')
+                    <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="form-group">
+                    <label for="phone_hours">Jam Kerja</label>
+                    <input type="text" class="form-control @error('phone_hours') is-invalid @enderror" name="phone_hours" id="phone_hours" 
+                        value="{{ old('phone_hours') ?? $setting->phone_hours }}">
+                    @error('phone_hours')
                     <span class="invalid-feedback">{{ $message }}</span>
                     @enderror
                 </div>
@@ -122,5 +132,3 @@
         </x-slot>
     </x-card>
 </form>
-
-@includeIf('includes.datepicker')

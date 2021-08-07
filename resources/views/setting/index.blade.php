@@ -16,6 +16,9 @@
             <li class="nav-item">
                 <a class="nav-link @if (request('pills') == 'logo') active @endif" href="{{ route('setting.index') }}?pills=logo">Logo</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link @if (request('pills') == 'sosial-media') active @endif" href="{{ route('setting.index') }}?pills=sosial-media">Sosial Media</a>
+            </li>
         </ul>
         <div class="tab-content" id="pills-tabContent">
             <div class="tab-pane fade @if (request('pills') == '') show active @endif" id="pills-general" role="tabpanel" aria-labelledby="pills-general-tab">
@@ -23,6 +26,9 @@
             </div>
             <div class="tab-pane fade @if (request('pills') == 'logo') show active @endif" id="pills-logo" role="tabpanel" aria-labelledby="pills-logo-tab">
                 @includeIf('setting.logo')
+            </div>
+            <div class="tab-pane fade @if (request('pills') == 'sosial-media') show active @endif" id="pills-sosial-media" role="tabpanel" aria-labelledby="pills-sosial-media-tab">
+                @includeIf('setting.sosial_media')
             </div>
         </div>
     </div>
