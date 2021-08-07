@@ -9,5 +9,5 @@ class Model extends Eloquent
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $guarded = ['id'];
 }
