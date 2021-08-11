@@ -81,7 +81,7 @@
         </div>
         <div class="form-group">
             <label for="about">Tentang Perusahaan</label>
-            <textarea class="form-control @error('about') is-invalid @enderror" name="about" id="about">{{ old('about') ?? $setting->about }}</textarea>
+            <textarea class="form-control summernote @error('about') is-invalid @enderror" name="about" id="about">{{ old('about') ?? $setting->about }}</textarea>
             @error('about')
             <span class="invalid-feedback">{{ $message }}</span>
             @enderror

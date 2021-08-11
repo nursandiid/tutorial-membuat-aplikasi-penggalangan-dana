@@ -10,7 +10,7 @@
                     <select name="bank_id" id="bank_id" class="custom-select @error('bank_id') is-invalid @enderror">
                         <option disabled selected>Pilih salah satu</option>
                         @foreach ($bank as $key => $item)
-                            <option value="{{ $key }}">{{ $item }}</option>
+                            <option value="{{ $key }}" {{ old('bank_id') == $key ? 'selected' : '' }}>{{ $item }}</option>
                         @endforeach
                     </select>
                     @error('bank_id')
@@ -24,7 +24,7 @@
                 <div class="form-group">
                     <label for="account">Nomor Rekening</label>
                     <input type="text" class="form-control @error('account') is-invalid @enderror" name="account" id="account" 
-                        value="{{ old('account') ?? $setting->account }}">
+                        value="{{ old('account') }}">
                     @error('account')
                     <span class="invalid-feedback">{{ $message }}</span>
                     @enderror
@@ -34,7 +34,7 @@
                 <div class="form-group">
                     <label for="name">Nama</label>
                     <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" id="name" 
-                        value="{{ old('name') ?? $setting->name }}">
+                        value="{{ old('name') }}">
                     @error('name')
                     <span class="invalid-feedback">{{ $message }}</span>
                     @enderror
