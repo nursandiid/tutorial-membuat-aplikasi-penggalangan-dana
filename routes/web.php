@@ -40,6 +40,7 @@ Route::group([
 
         Route::get('/setting', [SettingController::class, 'index'])->name('setting.index');
         Route::put('/setting/{setting}', [SettingController::class, 'update'])->name('setting.update');
+        Route::delete('/setting/{setting}/bank/{id}', [SettingController::class, 'bankDestroy'])->name('setting.bank.destroy');
     });
     
     Route::group([
