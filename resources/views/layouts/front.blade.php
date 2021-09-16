@@ -169,6 +169,31 @@
                 top: 7.5px;
             }
         }
+
+        /* Banner */
+        .banner {
+            min-height: 280px;
+            display: flex;
+            align-items: flex-end;
+            padding-bottom: 10px;
+            position: relative;
+        }
+        .banner.bg-charity2 {
+            background-image: url('{{ asset("/img/bgcharity2.png") }}');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: bottom;
+        }
+        .banner.bg-charity2 h2 {
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, .8);
+        }
+
+        @media (max-width: 575.98px) {
+            .banner.bg-charity2 {
+                background-size: cover;
+                background-position: left;
+            }
+        }
     </style>
 
     @stack('css')
@@ -209,7 +234,7 @@
     {{-- Navbar --}}
     <nav class="navbar navbar-expand-sm sticky-top navbar-light bg-white border-bottom" style="top: -1px;">
         <div class="container">
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand" href="{{ url('/') }}">
                 <img src="{{ asset('/img/logo.png') }}" alt="">
             </a>
             <button class="navbar-toggler first-load" type="button" data-toggle="collapse" data-target="#navbar1" aria-controls="navbar1" aria-expanded="false" aria-label="Toggle navigation">
@@ -221,9 +246,9 @@
 
             <div class="collapse navbar-collapse" id="navbar1">
                 <ul class="navbar-nav ml-auto">
-                    <a class="nav-link active" href="#">Home</a>
-                    <a class="nav-link" href="#">Kontak</a>
-                    <a class="nav-link" href="#">Tentang Kami</a>
+                    <a class="nav-link @if(request()->is('/')) active @endif" href="{{ url('/') }}">Home</a>
+                    <a class="nav-link @if(request()->is('contact')) active @endif" href="{{ url('/contact') }}">Kontak</a>
+                    <a class="nav-link @if(request()->is('about')) active @endif" href="#">Tentang Kami</a>
                     <div class="dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
