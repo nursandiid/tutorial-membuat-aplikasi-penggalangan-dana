@@ -248,7 +248,7 @@
                 <ul class="navbar-nav ml-auto">
                     <a class="nav-link @if(request()->is('/')) active @endif" href="{{ url('/') }}">Home</a>
                     <a class="nav-link @if(request()->is('contact')) active @endif" href="{{ url('/contact') }}">Kontak</a>
-                    <a class="nav-link @if(request()->is('about')) active @endif" href="#">Tentang Kami</a>
+                    <a class="nav-link @if(request()->is('about')) active @endif" href="{{ url('/about') }}">Tentang Kami</a>
                     <div class="dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
