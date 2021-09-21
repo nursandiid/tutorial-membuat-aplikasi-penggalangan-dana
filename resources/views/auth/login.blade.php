@@ -23,7 +23,7 @@
 
                                 <div class="form-group mb-3">
                                     <label for="email">Email</label>
-                                    <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email">
+                                    <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}">
 
                                     @error('email')
                                     <span class="invalid-feedback">
@@ -50,7 +50,7 @@
                                     <a href="#" class="small mt-1 text-muted">Lupa Password?</a>
                                 </div>
 
-                                <div class="d-grid">
+                                <div>
                                     <button class="btn btn-lg btn-primary btn-login mb-2">
                                         <i class="fas fa-sign-in-alt"></i> Masuk
                                     </button>

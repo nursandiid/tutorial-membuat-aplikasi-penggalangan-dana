@@ -73,7 +73,7 @@
             padding: 0;
             border-radius: 0;
             border: 0;
-            margin-top: 0;
+            margin-top: 8px;
         }
         #navbar1 .dropdown-item {
             transition: .3s;
