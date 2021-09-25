@@ -224,7 +224,7 @@
                     </a>
                 </div>
                 <div class="col-lg-2 action" style="white-space: nowrap;">
-                    <a href="" class="btn btn-sm btn-light py-0 rounded-0">Donasi</a>
+                    <a href="{{ url('/donation') }}" class="btn btn-sm btn-light py-0 rounded-0">Donasi</a>
                     <a href="" class="btn btn-sm btn-light py-0 rounded-0">Galang Dana</a>
                 </div>
             </div>
