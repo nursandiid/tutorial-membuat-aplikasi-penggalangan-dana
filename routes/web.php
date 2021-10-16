@@ -32,6 +32,9 @@ Route::get('/about', function () {
 Route::get('/donation', function () {
     return view('donation');
 });
+Route::get('/donation/1', function () {
+    return view('donation_detail');
+});
 
 Route::group([
     'middleware' => ['auth', 'role:admin,donatur']
