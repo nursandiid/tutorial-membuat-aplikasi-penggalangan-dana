@@ -30,10 +30,13 @@ Route::get('/about', function () {
     return view('about');
 });
 Route::get('/donation', function () {
-    return view('donation');
+    return view('donation.index');
 });
 Route::get('/donation/1', function () {
-    return view('donation_detail');
+    return view('donation.show');
+});
+Route::get('/donation/1/create', function () {
+    return view('donation.create');
 });
 
 Route::group([
