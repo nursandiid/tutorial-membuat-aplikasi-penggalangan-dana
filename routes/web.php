@@ -41,6 +41,9 @@ Route::get('/donation/1/create', function () {
 Route::get('/donation/1/payment', function () {
     return view('donation.payment');
 });
+Route::get('/donation/1/payment-confirmation', function () {
+    return view('donation.payment_confirmation');
+});
 
 Route::group([
     'middleware' => ['auth', 'role:admin,donatur']
