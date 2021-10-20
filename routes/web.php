@@ -38,6 +38,9 @@ Route::get('/donation/1', function () {
 Route::get('/donation/1/create', function () {
     return view('donation.create');
 });
+Route::get('/donation/1/payment', function () {
+    return view('donation.payment');
+});
 
 Route::group([
     'middleware' => ['auth', 'role:admin,donatur']
