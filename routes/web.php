@@ -21,28 +21,28 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('front.welcome');
 });
 Route::get('/contact', function () {
-    return view('contact');
+    return view('front.contact');
 });
 Route::get('/about', function () {
-    return view('about');
+    return view('front.about');
 });
 Route::get('/donation', function () {
-    return view('donation.index');
+    return view('front.donation.index');
 });
 Route::get('/donation/1', function () {
-    return view('donation.show');
+    return view('front.donation.show');
 });
 Route::get('/donation/1/create', function () {
-    return view('donation.create');
+    return view('front.donation.create');
 });
 Route::get('/donation/1/payment', function () {
-    return view('donation.payment');
+    return view('front.donation.payment');
 });
 Route::get('/donation/1/payment-confirmation', function () {
-    return view('donation.payment_confirmation');
+    return view('front.donation.payment_confirmation');
 });
 
 Route::group([
@@ -74,4 +74,8 @@ Route::group([
     ], function () {
         //
     });
+});
+
+Route::get('/campaign', function () {
+    return view('front.campaign.index');
 });

@@ -21,6 +21,8 @@
     <!-- Fontawesome -->
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
 
+    @stack('css_vendor')
+
     <style>
         body {
             font-family: 'Roboto', sans-serif;
@@ -320,10 +322,31 @@
         integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous">
     </script>
 
+    @stack('scripts_vendor')
+
     <script>
         $('.navbar-toggler').on('click', function () {
             $(this).removeClass('first-load');
         })
+        $('.custom-file-input').on('change', function () {
+            let filename = $(this).val().split('\\').pop();
+            $(this)
+                .next('.custom-file-label')
+                .addClass('selected')
+                .html(filename);
+        });
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        function preview(target, image) {
+            $(target)
+                .attr('src', window.URL.createObjectURL(image))
+                .show();
+        }
     </script>
 
     @stack('scripts')

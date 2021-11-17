@@ -80,7 +80,7 @@
 
     <div class="form-group">
         <label for="note">Tulis ajakan singkat untuk mengajak orang berdonasi</label>
-        <textarea type="number" name="note" id="note" class="form-control"></textarea>
+        <textarea name="note" id="note" class="form-control"></textarea>
     </div>
 
     <div class="row">
