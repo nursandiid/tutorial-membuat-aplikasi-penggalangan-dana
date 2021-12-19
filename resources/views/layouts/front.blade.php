@@ -4,14 +4,14 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name') }} - @yield('title')</title>
 
     <link rel="icon" href="{{ asset('/img/favicon.png') }}" type="image/*">
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
-        integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{{ asset('/AdminLTE/dist/css/adminlte.min.css') }}">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -206,28 +206,28 @@
         <div class="container">
             <div class="row d-flex align-items-center">
                 <div class="col-lg-3 social">
-                    <a href="" class="text-white"><i class="fab fa-linkedin-in"></i></a>
-                    <a href="" class="text-white ml-3"><i class="fab fa-twitter"></i></a>
-                    <a href="" class="text-white ml-3"><i class="fab fa-google-plus-g"></i></a>
-                    <a href="" class="text-white ml-3"><i class="fab fa-facebook-f"></i></a>
+                    <a href="{{ $setting->instagram_link }}" target="_blank" class="text-white"><i class="fab fa-instagram"></i></a>
+                    <a href="{{ $setting->twitter_link }}" target="_blank" class="text-white ml-3"><i class="fab fa-twitter"></i></a>
+                    <a href="{{ $setting->google_plus_link }}" target="_blank" class="text-white ml-3"><i class="fab fa-google-plus-g"></i></a>
+                    <a href="{{ $setting->fanpage_link }}" target="_blank" class="text-white ml-3"><i class="fab fa-facebook-f"></i></a>
                 </div>
                 <div class="col-lg-7 office-info text-center">
                     <a href="" class="text-white text-decoration-none">
                         <i class="fas fa-phone-alt"></i>
-                        <span class="ml-1">0813-0394-2343</span>
+                        <span class="ml-1">{{ $setting->phone }}</span>
                     </a>
                     <a href="" class="ml-3 text-white text-decoration-none">
                         <i class="far fa-clock"></i>
-                        <span class="ml-1">Senin - Jum'at, 08:00 s/d 16:00</span>
+                        <span class="ml-1">{{ $setting->phone_hours }}</span>
                     </a>
                     <a href="" class="ml-3 text-white text-decoration-none">
                         <i class="fas fa-envelope"></i>
-                        <span class="ml-1">support@w2charity.com</span>
+                        <span class="ml-1">{{ $setting->email }}</span>
                     </a>
                 </div>
                 <div class="col-lg-2 action" style="white-space: nowrap;">
                     <a href="{{ url('/donation') }}" class="btn btn-sm btn-light py-0 rounded-0">Donasi</a>
-                    <a href="" class="btn btn-sm btn-light py-0 rounded-0">Galang Dana</a>
+                    <a href="{{ url('/campaign') }}" class="btn btn-sm btn-light py-0 rounded-0">Galang Dana</a>
                 </div>
             </div>
         </div>
@@ -278,34 +278,35 @@
                         <img src="{{ asset('/img/logo2.png') }}" alt="" style="width: 170px;">
                     </div>
                     <p>
-                        Jl. Kibandang Samaran <br>
-                        Cirebon, Jawa Barat
+                        {{ $setting->address }} <br>
+                        {{ $setting->city }}, {{ $setting->province }}
                     </p>
-                    <p class="mb-1"><i class="fas fa-phone-alt mr-2"></i> 0813-0394-2343</p>
-                    <p class="mb-1"><i class="fas fa-envelope mr-2"></i> support@w2charity.com</p>
-                    <p class="mb-1"><i class="fas fa-globe mr-2"></i> www.w2charity.com</p>
+                    <p class="mb-1"><i class="fas fa-phone-alt mr-2"></i> {{ $setting->phone }}</p>
+                    <p class="mb-1"><i class="fas fa-envelope mr-2"></i> {{ $setting->email }}</p>
+                    <p class="mb-1"><i class="fas fa-globe mr-2"></i> {{ $setting->company_name }}</p>
                 </div>
                 <div class="col-lg-3 text-white-80">
                     <h5 class="mb-lg-4 mb-2">Mari Berbagi</h5>
                     <p class="mb-lg-3 mb-1">
-                        <a href="" class="text-white-80 text-decoration-none">Galang Dana</a> <br>
+                        <a href="{{ url('/campaign') }}" class="text-white-80 text-decoration-none">Galang Dana</a> <br>
                         <small class="text-muted">{{ tanggal_indonesia(now()) }}</small>
                     </p>
                     <p class="mb-lg-3 mb-1">
-                        <a href="" class="text-white-80 text-decoration-none">Donasi</a> <br>
+                        <a href="{{ url('/donation') }}" class="text-white-80 text-decoration-none">Donasi</a> <br>
                         <small class="text-muted">{{ tanggal_indonesia(now()) }}</small>
                     </p>
                 </div>
                 <div class="col-lg-3 text-white-80">
                     <h5 class="mb-lg-4 mb-2">Bantuan</h5>
-                    <p class="mb-lg-3 mb-1"><a href="" class="text-white-80 text-decoration-none">Tentang Kami</a></p>
-                    <p class="mb-lg-3 mb-1"><a href="" class="text-white-80 text-decoration-none">Syarat dan Ketentuan</a></p>
-                    <p class="mb-lg-3 mb-1"><a href="" class="text-white-80 text-decoration-none">Kebijakan dan Privasi</a></p>
+                    <p class="mb-lg-3 mb-1"><a href="{{ url('/about') }}" class="text-white-80 text-decoration-none">Tentang Kami</a></p>
+                    <p class="mb-lg-3 mb-1"><a href="#" class="text-white-80 text-decoration-none">Syarat dan Ketentuan</a></p>
+                    <p class="mb-lg-3 mb-1"><a href="#" class="text-white-80 text-decoration-none">Kebijakan dan Privasi</a></p>
                 </div>
                 <div class="col-lg-3 text-white-80">
                     <h5 class="mb-lg-4 mb-2">Mari Berbagi</h5>
-                    <form action="" class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="Masukan email">
+                    <form action="{{ url('/subscriber') }}" method="post" class="input-group mb-3">
+                        <input type="text" name="email" class="form-control" placeholder="Masukan email" value="{{ old('email') }}">
+                        @csrf
                         <div class="input-group-append">
                             <button class="btn btn-primary px-3"><i class="fas fa-paper-plane"></i></button>
                         </div>
@@ -315,39 +316,18 @@
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
-    </script>
+    <x-toast />
+
+    <script src="{{ asset('/AdminLTE/plugins/jquery/jquery.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous">
     </script>
 
-    @stack('scripts_vendor')
+    @stack('scripts_vendor')    
 
-    <script>
-        $('.navbar-toggler').on('click', function () {
-            $(this).removeClass('first-load');
-        })
-        $('.custom-file-input').on('change', function () {
-            let filename = $(this).val().split('\\').pop();
-            $(this)
-                .next('.custom-file-label')
-                .addClass('selected')
-                .html(filename);
-        });
-
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-
-        function preview(target, image) {
-            $(target)
-                .attr('src', window.URL.createObjectURL(image))
-                .show();
-        }
-    </script>
+    <!-- AdminLTE App -->
+    <script src="{{ asset('/AdminLTE/dist/js/adminlte.js') }}"></script>
+    <script src="{{ asset('/js/custom.js') }}"></script>
 
     @stack('scripts')
 </body>

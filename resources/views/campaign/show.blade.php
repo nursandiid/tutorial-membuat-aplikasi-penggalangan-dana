@@ -32,6 +32,23 @@
             </x-slot>
 
             {!! $campaign->body !!}
+
+            @if ($campaign->status == 'pending' && auth()->user()->hasRole('admin'))
+            <x-slot name="footer">
+                <button class="btn btn-success float-right"
+                    onclick="editForm('{{ route('campaign.update_status', $campaign->id) }}', 'publish', 'Yakin ingin mengkonfirmasi projek terpilih?', 'success')">Konfirmasi</button>
+            </x-slot>
+            @elseif($campaign->status == 'publish' && auth()->user()->hasRole('admin'))
+            <x-slot name="footer">
+                <button class="btn btn-danger"
+                    onclick="editForm('{{ route('campaign.update_status', $campaign->id) }}', 'archived', 'Yakin ingin mengarsipkan projek terpilih?', 'danger')">Arsipkan</button>
+            </x-slot>
+            @elseif ($campaign->status == 'archived' && auth()->user()->hasRole('admin'))
+            <x-slot name="footer">
+                <button class="btn btn-success float-right"
+                    onclick="editForm('{{ route('campaign.update_status', $campaign->id) }}', 'publish', 'Yakin ingin membuka arsip projek terpilih?', 'success')">Buka Arsip</button>
+            </x-slot>
+            @endif
         </x-card>
     </div>
     <div class="col-lg-4">
@@ -93,4 +110,62 @@
         </x-card>
     </div>
 </div>
+
+<x-modal size="modal-md">
+    <x-slot name="title">
+        Konfirmasi
+    </x-slot>
+
+    @method('put')
+
+    <input type="hidden" name="status" value="publish">
+
+    <div class="alert mt-3">
+        <i class="fas fa-info-circle mr-1"></i> <span class="text-message"></span>
+    </div>
+
+    <x-slot name="footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+        <button type="button" class="btn btn-primary" onclick="submitForm(this.form)">Simpan</button>
+    </x-slot>
+</x-modal>
 @endsection
+
+@push('scripts')
+<script>
+    let modal = '#modal-form';
+    
+    function editForm(url, status, message, color) {
+        $(modal).modal('show');
+        $(`${modal} form`).attr('action', url);
+        
+        $(`${modal} [name=status]`).val(status);
+        $(`${modal} .text-message`).text(message);
+        $(`${modal} .alert`).removeClass('alert-success alert-danger').addClass(`alert-${color}`)
+    }
+
+    function submitForm(originalForm) {
+        $.post({
+                url: $(originalForm).attr('action'),
+                data: new FormData(originalForm),
+                dataType: 'json',
+                contentType: false,
+                cache: false,
+                processData: false
+            })
+            .done(response => {
+                $(modal).modal('hide');
+                showAlert(response.message, 'success');
+                $('.card-footer').remove();
+            })
+            .fail(errors => {
+                if (errors.status == 422) {
+                    loopErrors(errors.responseJSON.errors);
+                    return;
+                }
+
+                showAlert(errors.responseJSON.message, 'danger');
+            });
+    }
+</script>
+@endpush

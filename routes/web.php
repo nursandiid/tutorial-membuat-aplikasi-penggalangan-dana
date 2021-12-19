@@ -3,9 +3,22 @@
 use App\Http\Controllers\{
     CampaignController,
     CategoryController,
+    ContactController,
     DashboardController,
+    DonationController,
+    DonaturController,
     SettingController,
+    SubscriberController,
     UserProfileInformationController
+};
+use App\Http\Controllers\Front\{
+    AboutController,
+    ContactController as FrontContactController,
+    CampaignController as FrontCampaignController,
+    DonationController as FrontDonationController,
+    FrontController,
+    PaymentController,
+    SubcriberController as FrontSubcriberController
 };
 use Illuminate\Support\Facades\Route;
 
@@ -20,62 +33,76 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('front.welcome');
-});
-Route::get('/contact', function () {
-    return view('front.contact');
-});
-Route::get('/about', function () {
-    return view('front.about');
-});
-Route::get('/donation', function () {
-    return view('front.donation.index');
-});
-Route::get('/donation/1', function () {
-    return view('front.donation.show');
-});
-Route::get('/donation/1/create', function () {
-    return view('front.donation.create');
-});
-Route::get('/donation/1/payment', function () {
-    return view('front.donation.payment');
-});
-Route::get('/donation/1/payment-confirmation', function () {
-    return view('front.donation.payment_confirmation');
+Route::get('/', [FrontController::class, 'index']);
+Route::get('/contact', [FrontContactController::class, 'index']);
+Route::post('/contact', [FrontContactController::class, 'store']);
+Route::get('/about', [AboutController::class, 'index']);
+Route::post('/subscriber', [FrontSubcriberController::class, 'store']);
+Route::resource('/campaign', FrontCampaignController::class)->only('index', 'create', 'edit');
+Route::get('/donation', [FrontDonationController::class, 'index']);
+Route::group([
+    'middleware' => ['auth', 'role:admin,donatur'],
+    'prefix' => '/donation/{id}'
+], function () {
+    Route::get('/', [FrontDonationController::class, 'show']);
+    Route::get('/create', [FrontDonationController::class, 'create']);
+    Route::post('/', [FrontDonationController::class, 'store']);
+    Route::get('/payment/{order_number}', [PaymentController::class, 'index']);
+    Route::get('/payment-confirmation/{order_number}', [PaymentController::class, 'paymentConfirmation']);
+    Route::post('/payment-confirmation/{order_number}', [PaymentController::class, 'store']);
 });
 
 Route::group([
-    'middleware' => ['auth', 'role:admin,donatur']
+    'middleware' => ['auth', 'role:admin,donatur'],
+    'prefix' => 'admin'
 ], function () {
+    Route::get('/', function () {
+        return redirect()->route('dashboard');
+    });
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
 
     Route::get('/user/profile', [UserProfileInformationController::class, 'show'])
         ->name('profile.show');
-    Route::delete('/user/bank/{id}', [UserProfileInformationController::class, 'bankDestroy'])->name('profile.bank.destroy');
+    Route::delete('/user/bank/{id}', [UserProfileInformationController::class, 'bankDestroy'])
+        ->name('profile.bank.destroy');
 
     Route::group([
         'middleware' => 'role:admin'
     ], function () {
         Route::resource('/category', CategoryController::class);
 
-        Route::get('/campaign/data', [CampaignController::class, 'data'])->name('campaign.data');
-        Route::get('/campaign/detail/{id}', [CampaignController::class, 'detail'])->name('campaign.detail');
-        Route::resource('/campaign', CampaignController::class)->except('create', 'edit');
-
-        Route::get('/setting', [SettingController::class, 'index'])->name('setting.index');
-        Route::put('/setting/{setting}', [SettingController::class, 'update'])->name('setting.update');
-        Route::delete('/setting/{setting}/bank/{id}', [SettingController::class, 'bankDestroy'])->name('setting.bank.destroy');
+        Route::get('/setting', [SettingController::class, 'index'])
+            ->name('setting.index');
+        Route::put('/setting/{setting}', [SettingController::class, 'update'])
+            ->name('setting.update');
+        Route::delete('/setting/{setting}/bank/{id}', [SettingController::class, 'bankDestroy'])
+            ->name('setting.bank.destroy');
     });
-    
+
+    Route::get('/campaign/data', [CampaignController::class, 'data'])
+        ->name('campaign.data');
+    Route::resource('/campaign', CampaignController::class);
+    Route::put('/campaign/{id}/update_status', [CampaignController::class, 'updateStatus'])
+        ->name('campaign.update_status');
+
+    Route::get('/donation/data', [DonationController::class, 'data'])
+        ->name('donation.data');
+    Route::resource('/donation', DonationController::class);
+
     Route::group([
-        'middleware' => 'role:donatur'
+        'middleware' => 'role:admin'
     ], function () {
-        //
-    });
-});
+        Route::get('/donatur/data', [DonaturController::class, 'data'])
+            ->name('donatur.data');
+        Route::resource('/donatur', DonaturController::class);
 
-Route::get('/campaign', function () {
-    return view('front.campaign.index');
+        Route::get('/contact/data', [ContactController::class, 'data'])
+            ->name('contact.data');
+        Route::resource('/contact', ContactController::class)->only('index', 'destroy');
+
+        Route::get('/subscriber/data', [SubscriberController::class, 'data'])
+            ->name('subscriber.data');
+        Route::resource('/subscriber', SubscriberController::class)->only('index', 'destroy');
+    });
 });

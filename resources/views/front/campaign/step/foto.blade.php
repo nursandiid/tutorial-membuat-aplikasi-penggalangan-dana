@@ -5,10 +5,14 @@
             onchange="preview('.preview-path_image', this.files[0])">
         <label class="custom-file-label" for="path_image">Choose file</label>
     </div>
-    <small class="text-muted">Format foto harus: (jpg, png, jpeg)</small>
-    <img src="" class="img-thumbnail preview-path_image" style="display: none;">
+    <small class="text-muted d-block">Format foto harus: (jpg, png, jpeg)</small>
+    @if (isset($campaign) && Storage::disk('public')->exists($campaign->path_image))
+        <img src="{{ Storage::disk('public')->url($campaign->path_image) }}" class="w-50" alt="...">
+    @else
+        <img src="" class="img-thumbnail preview-path_image w-50" style="display: none;">
+    @endif
 </div>
 <div class="form-group">
-    <button class="btn btn-outline-primary" onclick="stepper.previous()">Sebelumnya</button>
-    <button class="btn btn-primary" onclick="stepper.next()">Selanjutnya</button>
+    <button type="button" class="btn btn-outline-primary" onclick="stepper.previous()">Sebelumnya</button>
+    <button type="button" class="btn btn-primary" onclick="stepper.next()">Selanjutnya</button>
 </div>

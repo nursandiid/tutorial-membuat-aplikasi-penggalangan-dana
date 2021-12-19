@@ -21,7 +21,6 @@ if (! function_exists('format_uang')) {
     }
 }
 
-
 if (! function_exists('tanggal_indonesia')) {
     function tanggal_indonesia($tgl, $tampil_hari = false)
     {

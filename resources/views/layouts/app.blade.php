@@ -37,6 +37,11 @@
         .note-editor.is-invalid {
             border-color: var(--danger);
         }
+        .nav-sidebar .nav-header {
+            font-size: .6rem;
+            font-weight: bold;
+            color: #888;
+        }
     </style>
 
     @stack('css')
@@ -129,28 +134,7 @@
 
     <!-- AdminLTE App -->
     <script src="{{ asset('/AdminLTE/dist/js/adminlte.js') }}"></script>
-
-    <script>
-        $('.custom-file-input').on('change', function () {
-            let filename = $(this).val().split('\\').pop();
-            $(this)
-                .next('.custom-file-label')
-                .addClass('selected')
-                .html(filename);
-        });
-
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-
-        function preview(target, image) {
-            $(target)
-                .attr('src', window.URL.createObjectURL(image))
-                .show();
-        }
-    </script>
+    <script src="{{ asset('/js/custom.js') }}"></script>
 
     <x-toast />
     @stack('scripts')

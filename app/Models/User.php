@@ -71,4 +71,21 @@ class User extends Authenticatable
             ->withPivot('account', 'name')
             ->withTimestamps();
     }
+
+    public function scopeDonatur($query)
+    {
+        return $query->whereHas('role', function ($query) {
+            $query->where('name', 'donatur');
+        });
+    }
+
+    public function campaigns()
+    {
+        return $this->hasMany(Campaign::class, 'user_id', 'id');
+    }
+
+    public function donations()
+    {
+        return $this->hasMany(Donation::class, 'user_id', 'id');
+    }
 }

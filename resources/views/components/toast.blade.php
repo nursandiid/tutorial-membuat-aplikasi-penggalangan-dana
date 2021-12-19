@@ -11,7 +11,7 @@
             $('.toasts-top-right').remove();
         }, 3000);
     </script>
-    @elseif (session()->has('erros'))
+    @elseif (session()->has('error_msg'))
     <script>
         $(document).Toasts('create', {
             class: 'bg-danger',

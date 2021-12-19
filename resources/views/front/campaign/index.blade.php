@@ -54,22 +54,30 @@
                     </div>
                 </div>
                 <div class="bs-stepper-content">
-                    <!-- your steps content here -->
-                    <div id="judul-part" class="content" role="tabpanel" aria-labelledby="judul-part-trigger">
-                        @includeIf('front.campaign.step.judul')
-                    </div>
-                    <div id="detail-part" class="content" role="tabpanel" aria-labelledby="detail-part-trigger">
-                        @includeIf('front.campaign.step.detail')
-                    </div>
-                    <div id="foto-part" class="content" role="tabpanel" aria-labelledby="foto-part-trigger">
-                        @includeIf('front.campaign.step.foto')
-                    </div>
-                    <div id="deskripsi-part" class="content" role="tabpanel" aria-labelledby="deskripsi-part-trigger">
-                        @includeIf('front.campaign.step.deskripsi')
-                    </div>
-                    <div id="konfirmasi-part" class="content" role="tabpanel" aria-labelledby="konfirmasi-part-trigger">
-                        @includeIf('front.campaign.step.konfirmasi')
-                    </div>
+                    <form action="{{ isset($campaign) ? route('campaign.update', $campaign->id) : route('campaign.store') }}" method="post" onsubmit="submitForm(this)" enctype="multipart/form-data">
+                        @csrf
+
+                        @isset($campaign)
+                            @method('PUT')
+                        @endisset
+
+                        <!-- your steps content here -->
+                        <div id="judul-part" class="content" role="tabpanel" aria-labelledby="judul-part-trigger">
+                            @includeIf('front.campaign.step.judul')
+                        </div>
+                        <div id="detail-part" class="content" role="tabpanel" aria-labelledby="detail-part-trigger">
+                            @includeIf('front.campaign.step.detail')
+                        </div>
+                        <div id="foto-part" class="content" role="tabpanel" aria-labelledby="foto-part-trigger">
+                            @includeIf('front.campaign.step.foto')
+                        </div>
+                        <div id="deskripsi-part" class="content" role="tabpanel" aria-labelledby="deskripsi-part-trigger">
+                            @includeIf('front.campaign.step.deskripsi')
+                        </div>
+                        <div id="konfirmasi-part" class="content" role="tabpanel" aria-labelledby="konfirmasi-part-trigger">
+                            @includeIf('front.campaign.step.konfirmasi')
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -84,11 +92,44 @@
 
 @includeIf('includes.select2', ['placeholder' => 'Pilih kategori'])
 @includeIf('includes.datepicker')
+@includeIf('includes.summernote')
 
 @push('scripts')
 <script>
     $(document).ready(function () {
         window.stepper = new Stepper($('.bs-stepper')[0])
+
+        $('.bs-stepper form').on('submit', function (e) {
+            e.preventDefault();
+            return;
+        })
     });
+
+    function submitForm(originalForm) {
+        $.post({
+                url: $(originalForm).attr('action'),
+                data: new FormData(originalForm),
+                dataType: 'json',
+                contentType: false,
+                cache: false,
+                processData: false
+            })
+            .done(response => {
+                showAlert(response.message, 'success');
+                resetForm(originalForm);
+
+                setTimeout(() => {
+                    document.location = '{{ route('campaign.index') }}';
+                }, 3000);
+            })
+            .fail(errors => {
+                if (errors.status == 422) {
+                    loopErrors(errors.responseJSON.errors);
+                    return;
+                }
+
+                showAlert(errors.responseJSON.message, 'danger');
+            });
+    }
 </script>
 @endpush
