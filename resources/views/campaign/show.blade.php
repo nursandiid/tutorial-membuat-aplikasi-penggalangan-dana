@@ -73,38 +73,55 @@
         </x-card>
 
         <x-card>
-            <h3 class="font-weight-bold">Rp. {{ format_uang(300000) }}</h3>
-            <p class="font-weight-bold">Terkumpul dari Rp. {{ format_uang(10000000) }}</p>
+            <h1 class="font-weight-bold">Rp. {{ format_uang($campaign->nominal) }}</h1>
+            <p class="font-weight-bold">Terkumpul dari Rp. {{ format_uang($campaign->goal) }}</p>
             <div class="progress" style="height: .3rem;">
-                <div class="progress-bar" role="progressbar" style="width: 7%" aria-valuenow="7" aria-valuemin="0" aria-valuemax="100"></div>
+                <div class="progress-bar" role="progressbar" style="width: {{ $campaign->nominal / $campaign->goal * 100 }}%" aria-valuenow="{{ $campaign->nominal / $campaign->goal * 100 }}" aria-valuemin="0" aria-valuemax="{{ 100 }}"></div>
             </div>
-            <div class="d-flex justify-content-between">
-                <p>7% tercapai</p>
-                <p>3 bulan lagi</p>
+            <div class="d-flex justify-content-between mt-1">
+                <p>{{ $campaign->nominal / $campaign->goal * 100 }}% tercapai</p>
+                @if (now()->parse($campaign->end_date)->lt(now()))
+                <p>selesai {{ now()->parse($campaign->end_date)->diffForHumans() }}</p>
+                @else
+                <p>tersisa {{ now()->parse($campaign->end_date)->diffForHumans() }}</p>
+                @endif
             </div>
-            <h4 class="font-weight-bold">Donatur (3)</h4>
+
+            <h4 class="font-weight-bold">Donatur ({{ $campaign->donations->count() }})</h4>
             <ul class="nav nav-pills mb-3 daftar-donasi" id="pills-tab" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <a class="nav-link active" id="pills-waktu-tab" data-toggle="pill" href="#pills-waktu" role="tab"
-                        aria-controls="pills-waktu" aria-selected="true">Waktu</a>
+                <li class="nav-item">
+                    <a class="nav-link active" id="pills-waktu-tab" data-toggle="pill" href="#pills-waktu"
+                        role="tab" aria-controls="pills-waktu" aria-selected="true">Waktu</a>
                 </li>
-                <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="pills-jumlah-tab" data-toggle="pill" href="#pills-jumlah" role="tab"
-                        aria-controls="pills-jumlah" aria-selected="false">Jumlah</a>
+                <li class="nav-item">
+                    <a class="nav-link" id="pills-jumlah-tab" data-toggle="pill" href="#pills-jumlah"
+                        role="tab" aria-controls="pills-jumlah" aria-selected="false">Jumlah</a>
                 </li>
             </ul>
             <div class="tab-content" id="pills-tabContent">
-                <div class="tab-pane fade show active" id="pills-waktu" role="tabpanel" aria-labelledby="pills-waktu-tab">
-                    @for ($i = 0; $i < 5; $i++)
-                    <div>
-                        <p class="font-weight-bold mb-0">User</p>
-                        <p class="font-weight-bold mb-0">Rp. {{ format_uang(100000) }}</p>
-                        <p class="text-muted mb-0">{{ tanggal_indonesia(date('Y-m-d H:i:s')) }}</p>
+                <div class="tab-pane fade show active" id="pills-waktu" role="tabpanel"
+                    aria-labelledby="pills-waktu-tab">
+                    @forelse ($campaign->donations->where('status', 'confirmed')->sortBy('created_at')->load('user') as $key => $item)
+                    <div @if ($key > 0) class="mt-1" @endif>
+                        <p class="font-weight-bold mb-0">{{ $item->user->name }}</p>
+                        <p class="font-weight-bold mb-0">Rp. {{ format_uang($item->nominal) }}</p>
+                        <p class="text-muted mb-0">{{ tanggal_indonesia($item->created_at) }}</p>
                     </div>
-                    @endfor
+                    @empty
+                    <p class="text-muted mb-0">Belum tersedia</p>
+                    @endforelse
                 </div>
-                <div class="tab-pane fade" id="pills-jumlah" role="tabpanel" aria-labelledby="pills-jumlah-tab">
-                    
+                <div class="tab-pane fade" id="pills-jumlah" role="tabpanel"
+                    aria-labelledby="pills-jumlah-tab">
+                    @forelse ($campaign->donations->where('status', 'confirmed')->sortBy('nominal')->load('user') as $key => $item)
+                    <div @if ($key > 0) class="mt-1" @endif>
+                        <p class="font-weight-bold mb-0">{{ $item->user->name }}</p>
+                        <p class="font-weight-bold mb-0">Rp. {{ format_uang($item->nominal) }}</p>
+                        <p class="text-muted mb-0">{{ tanggal_indonesia($item->created_at) }}</p>
+                    </div>
+                    @empty
+                    <p class="text-muted mb-0">Belum tersedia</p>
+                    @endforelse
                 </div>
             </div>
         </x-card>
