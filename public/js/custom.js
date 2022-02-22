@@ -6,6 +6,8 @@ $('.custom-file-input').on('change', function () {
         .html(filename);
 });
 
+$('[data-toggle="tooltip"]').tooltip()
+
 $.ajaxSetup({
     headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

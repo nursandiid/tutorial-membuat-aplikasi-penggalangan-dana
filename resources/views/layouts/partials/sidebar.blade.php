@@ -18,7 +18,10 @@
                 @endif
             </div>
             <div class="info">
-                <a href="{{ route('profile.show') }}" class="d-block">{{ auth()->user()->name }}</a>
+                <a href="{{ route('profile.show') }}" class="d-block" data-toggle="tooltip" data-placement="top" title="Edit Profil">
+                    {{ auth()->user()->name }}
+                    <i class="fas fa-pencil-alt ml-2 text-sm text-primary"></i>
+                </a>
             </div>
         </div>
 
