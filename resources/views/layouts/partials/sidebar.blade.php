@@ -73,7 +73,7 @@
                 </li>
                 @endif
                 <li class="nav-item">
-                    <a href="pages/widgets.html" class="nav-link">
+                    <a href="{{ route('donation.index') }}" class="nav-link {{ request()->is('admin/donation*') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-donate"></i>
                         <p>
                             Daftar Donasi
@@ -99,27 +99,12 @@
                         </p>
                     </a>
                 </li>
-                @endif
-
-                @if (auth()->user()->hasRole('admin') || auth()->user()->hasRole('donatur'))
                 <li class="nav-header">REPORT</li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-chart-bar"></i>
+                    <a href="{{ route('report.index') }}" class="nav-link {{ request()->is('admin/report*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-file-pdf"></i>
                         <p>
                             Laporan
-                        </p>
-                    </a>
-                </li>
-                @endif
-
-                @if (auth()->user()->hasRole('donatur'))
-                <li class="nav-header">LOG</li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-info-circle"></i>
-                        <p>
-                            Log Aktivitas
                         </p>
                     </a>
                 </li>
@@ -128,7 +113,7 @@
                 @if (auth()->user()->hasRole('admin'))
                 <li class="nav-header">SISTEM</li>
                 <li class="nav-item">
-                    <a href="{{ route('setting.index') }}" class="nav-link">
+                    <a href="{{ route('setting.index') }}" class="nav-link {{ request()->is('admin/setting*') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-cogs"></i>
                         <p>
                             Pengaturan
