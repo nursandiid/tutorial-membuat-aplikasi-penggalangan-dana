@@ -63,7 +63,7 @@ class CampaignController extends Controller
 
                 if (auth()->user()->hasRole('donatur')) {
                     $text .= '
-                        <a href="'. url('/campaign/'. $query->id .'/edit') .'" class="btn btn-link text-primary"><i class="fas fa-pencil-alt"></i></a>
+                        <a href="'. route('campaign.edit', $query->id) .'" class="btn btn-link text-primary"><i class="fas fa-pencil-alt"></i></a>
                     ';
                 } else {
                     $text .= '
@@ -133,6 +133,8 @@ class CampaignController extends Controller
      */
     public function show(Request $request, Campaign $campaign)
     {
+        $campaign = $campaign->load('donations');
+
         if (! $request->ajax()) {
             return view('campaign.show', compact('campaign'));
         }
