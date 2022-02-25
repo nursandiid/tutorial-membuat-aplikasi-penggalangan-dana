@@ -15,7 +15,7 @@
                 @csrf
                 <div class="form-group">
                     <label for="name">Atas Nama (pengirim) <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') ?? ($payment->name ?? $campaign->user->name) }}">
+                    <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') ?? ($payment->name ?? $donation->user->name) }}">
                     @error('name')
                     <div class="invalid-feedback">
                         {{ $message }}
@@ -85,5 +85,3 @@
     </div>
 </div>
 @endsection
-
-<x-toast />

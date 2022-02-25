@@ -64,7 +64,7 @@
                 </div>
             </div>
             <div class="col-lg-4">
-                <div class="card p-3 border-0 shadow-0">
+                <x-card>
                     <h1 class="font-weight-bold">Rp. {{ format_uang($campaign->nominal) }}</h1>
                     <p class="font-weight-bold">Terkumpul dari Rp. {{ format_uang($campaign->goal) }}</p>
                     <div class="progress" style="height: .3rem;">
@@ -72,14 +72,18 @@
                     </div>
                     <div class="d-flex justify-content-between mt-1">
                         <p>{{ $campaign->nominal / $campaign->goal * 100 }}% tercapai</p>
-                        <p>{{ now()->parse($campaign->end_date)->diffForHumans() }}</p>
+                        @if (now()->parse($campaign->end_date)->lt(now()))
+                        <p>selesai {{ now()->parse($campaign->end_date)->diffForHumans() }}</p>
+                        @else
+                        <p>tersisa {{ now()->parse($campaign->end_date)->diffForHumans() }}</p>
+                        @endif
                     </div>
 
                     <div class="donasi mt-2 mb-4">
                         <a href="{{ url('/donation/'. $campaign->id .'/create') }}" class="btn btn-primary btn-lg btn-block">Donasi Sekarang</a>
                     </div>
-
-                    <h4 class="font-weight-bold">Donatur (3)</h4>
+        
+                    <h4 class="font-weight-bold">Donatur ({{ $campaign->donations->count() }})</h4>
                     <ul class="nav nav-pills mb-3 daftar-donasi" id="pills-tab" role="tablist">
                         <li class="nav-item">
                             <a class="nav-link active" id="pills-waktu-tab" data-toggle="pill" href="#pills-waktu"
@@ -93,20 +97,30 @@
                     <div class="tab-content" id="pills-tabContent">
                         <div class="tab-pane fade show active" id="pills-waktu" role="tabpanel"
                             aria-labelledby="pills-waktu-tab">
-                            @for ($i = 0; $i < 5; $i++)
-                            <div @if ($i > 0) class="mt-1" @endif>
-                                <p class="font-weight-bold mb-0">User</p>
-                                <p class="font-weight-bold mb-0">Rp. {{ format_uang(100000) }}</p>
-                                <p class="text-muted mb-0">{{ tanggal_indonesia(date('Y-m-d H:i:s')) }}</p>
+                            @forelse ($campaign->donations->where('status', 'confirmed')->sortBy('created_at')->load('user') as $key => $item)
+                            <div @if ($key > 0) class="mt-1" @endif>
+                                <p class="font-weight-bold mb-0">{{ $item->user->name }}</p>
+                                <p class="font-weight-bold mb-0">Rp. {{ format_uang($item->nominal) }}</p>
+                                <p class="text-muted mb-0">{{ tanggal_indonesia($item->created_at) }}</p>
                             </div>
-                            @endfor
+                            @empty
+                            <p class="text-muted mb-0">Belum tersedia</p>
+                            @endforelse
                         </div>
                         <div class="tab-pane fade" id="pills-jumlah" role="tabpanel"
                             aria-labelledby="pills-jumlah-tab">
-                            ...
+                            @forelse ($campaign->donations->where('status', 'confirmed')->sortBy('nominal')->load('user') as $key => $item)
+                            <div @if ($key > 0) class="mt-1" @endif>
+                                <p class="font-weight-bold mb-0">{{ $item->user->name }}</p>
+                                <p class="font-weight-bold mb-0">Rp. {{ format_uang($item->nominal) }}</p>
+                                <p class="text-muted mb-0">{{ tanggal_indonesia($item->created_at) }}</p>
+                            </div>
+                            @empty
+                            <p class="text-muted mb-0">Belum tersedia</p>
+                            @endforelse
                         </div>
                     </div>
-                </div>
+                </x-card>
             </div>
         </div>
     </div>

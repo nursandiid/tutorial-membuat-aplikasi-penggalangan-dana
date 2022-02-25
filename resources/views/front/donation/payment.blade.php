@@ -58,5 +58,3 @@
     </div>
 </div>
 @endsection
-
-<x-toast />
