@@ -87,11 +87,11 @@
                         </div>
                     </div>
                     <div class="card-body p-2 border-top">
-                        <h5 class="card-title">{{ $item->title }}</h5>
+                        <a href="{{ url('/donation/'. $item->id) }}" class="card-title text-dark mb-3">{{ $item->title }}</a>
                         <p class="card-text">{{ Str::limit($item->short_description, 100, ' ...') }}</p>
                     </div>
                     <div class="card-footer p-2">
-                        <a href="{{ url('/donation/'. $item->id) }}" class="btn btn-primary d-block rounded">
+                        <a href="{{ url('/donation/'. $item->id .'/create') }}" class="btn btn-primary d-block rounded">
                             <i class="fas fa-donate mr-2"></i>
                             Donasi Sekarang
                         </a>

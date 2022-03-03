@@ -257,8 +257,17 @@
                             Bantuan
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            @if (auth()->guest())
                             <a class="dropdown-item" href="{{ route('login') }}">Login</a>
                             <a class="dropdown-item" href="{{ route('register') }}">Register</a>
+                            @else
+                            <a class="dropdown-item" href="{{ route('dashboard') }}">Dasbboard</a>
+                            <a class="dropdown-item" href="#" onclick="document.querySelector('#form-logout').submit()">Keluar</a>
+
+                            <form action="{{ route('logout') }}" method="post" id="form-logout">
+                                @csrf
+                            </form>
+                            @endif
                         </div>
                     </div>
                 </ul>

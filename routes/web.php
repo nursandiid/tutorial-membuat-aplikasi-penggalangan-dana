@@ -41,11 +41,11 @@ Route::get('/about', [AboutController::class, 'index']);
 Route::post('/subscriber', [FrontSubcriberController::class, 'store']);
 Route::resource('/campaign', FrontCampaignController::class)->only('index', 'create', 'edit');
 Route::get('/donation', [FrontDonationController::class, 'index']);
+Route::get('/donation/{id}', [FrontDonationController::class, 'show']);
 Route::group([
     'middleware' => ['auth', 'role:admin,donatur'],
     'prefix' => '/donation/{id}'
 ], function () {
-    Route::get('/', [FrontDonationController::class, 'show']);
     Route::get('/create', [FrontDonationController::class, 'create']);
     Route::post('/', [FrontDonationController::class, 'store']);
     Route::get('/payment/{order_number}', [PaymentController::class, 'index']);
