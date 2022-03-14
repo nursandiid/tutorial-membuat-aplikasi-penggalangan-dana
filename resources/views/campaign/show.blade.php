@@ -87,6 +87,10 @@
                 @endif
             </div>
 
+            <div class="mt-2 mb-4">
+                <a href="{{ route('campaign.cashout', $campaign->id) }}" class="btn btn-success btn-lg btn-block">Cairkan Sekarang</a>
+            </div>
+
             <h4 class="font-weight-bold">Donatur ({{ $campaign->donations->count() }})</h4>
             <ul class="nav nav-pills mb-3 daftar-donasi" id="pills-tab" role="tablist">
                 <li class="nav-item">

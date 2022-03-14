@@ -135,6 +135,10 @@ class CampaignController extends Controller
     {
         $campaign = $campaign->load('donations');
 
+        if (auth()->user()->hasRole('donatur') && $campaign->user_id != auth()->id()) {
+            abort(404);
+        }
+
         if (! $request->ajax()) {
             return view('campaign.show', compact('campaign'));
         }
@@ -235,5 +239,16 @@ class CampaignController extends Controller
         $campaign->delete();
 
         return response()->json(['data' => null, 'message' => 'Projek berhasil dihapus']);
+    }
+
+    public function cashout($id)
+    {
+        $campaign = Campaign::findOrFail($id)->load('donations', 'cashouts');
+
+        if ($campaign->user_id != auth()->id()) {
+            abort(404);
+        }
+
+        return view('campaign.cashout', compact('campaign'));
     }
 }

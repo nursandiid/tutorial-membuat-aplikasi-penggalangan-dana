@@ -87,6 +87,10 @@ Route::group([
     Route::put('/campaign/{id}/update_status', [CampaignController::class, 'updateStatus'])
         ->name('campaign.update_status');
 
+    Route::get('/campaign/{id}/cashout', [CampaignController::class, 'cashout'])
+        ->name('campaign.cashout');
+    
+
     Route::get('/donation/data', [DonationController::class, 'data'])
         ->name('donation.data');
     Route::resource('/donation', DonationController::class);

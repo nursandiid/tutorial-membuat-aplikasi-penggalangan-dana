@@ -41,6 +41,19 @@
                 </div>
             </div>
         </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input  @error('is_main') is-invalid @enderror" id="is_main" name="is_main"
+                        value="{{ old('is_main') ?? 1 }}"
+                        {{ old('is_main') == 1 ? 'checked' : '' }}>
+                    <label class="custom-control-label" for="is_main">Akun utama?</label>
+                    @error('is_main')
+                    <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+        </div>
 
         <x-slot name="footer">
             <button type="reset" class="btn btn-dark">Reset</button>
@@ -66,7 +79,7 @@
             <tr>
                 <td>{{ $key+1 }}</td>
                 <td>{{ $item->pivot->name }}</td>
-                <td>{{ $item->pivot->account }}</td>
+                <td>{{ $item->pivot->account }} {!! $item->pivot->is_main ? '<small class="text-primary"><i class="fas fa-check-circle"></i></small>' : '' !!}</td>
                 <td>{{ $item->name }}</td>
                 <td>
                     <form action="{{ route('profile.bank.destroy', $item->id) }}" method="post">

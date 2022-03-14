@@ -23,6 +23,11 @@ class Campaign extends Model
         return $this->hasMany(Donation::class, 'campaign_id', 'id');
     }
 
+    public function cashouts()
+    {
+        return $this->hasMany(Cashout::class, 'campaign_id', 'id');
+    }
+
     public function statusColor()
     {
         $color = '';
