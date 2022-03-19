@@ -4,7 +4,7 @@
         <div class="input-group-prepend">
             <div class="input-group-text">Rp</div>
         </div>
-        <input type="number" name="goal" id="goal" class="form-control" placeholder="0" value="{{ isset($campaign) ? $campaign->goal : 0 }}">
+        <input type="text" name="goal" id="goal" class="form-control" placeholder="0" value="{{ isset($campaign) ? format_uang($campaign->goal) : 0 }}" onkeyup="format_uang(this)">
     </div>
 </div>
 <div class="form-group">

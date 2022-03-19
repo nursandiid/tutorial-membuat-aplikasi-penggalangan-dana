@@ -171,22 +171,15 @@
     let modal = '#modal-form';
 
     function editForm(url, status, message, color) {
-        $.get(url)
-            .done(response => {
-                $(modal).modal('show');
-                $(`${modal} form`).attr('action', url);
-                $(`${modal} [name=_method]`).val('put');
+        $(modal).modal('show');
+        $(`${modal} form`).attr('action', url);
+        $(`${modal} [name=_method]`).val('put');
 
-                resetForm(`${modal} form`);
-                
-                $(`${modal} [name=status]`).val(status);
-                $(`${modal} .text-message`).html(message);
-                $(`${modal} .alert`).removeClass('alert-success alert-danger').addClass(`alert-${color}`);
-            })
-            .fail(errors => {
-                alert('Tidak dapat menampilkan data');
-                return;
-            });
+        resetForm(`${modal} form`);
+        
+        $(`${modal} [name=status]`).val(status);
+        $(`${modal} .text-message`).html(message);
+        $(`${modal} .alert`).removeClass('alert-success alert-danger').addClass(`alert-${color}`);
     }
 
     function submitForm(originalForm) {

@@ -62,7 +62,7 @@
         <div class="col-lg-6">
             <div class="form-group">
                 <label for="goal">Goal</label>
-                <input type="number" name="goal" id="goal" class="form-control">
+                <input type="text" name="goal" id="goal" class="form-control" onkeyup="format_uang(this)">
             </div>
         </div>
         <div class="col-lg-6">

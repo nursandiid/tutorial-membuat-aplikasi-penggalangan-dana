@@ -83,7 +83,7 @@
                         <a href="{{ url('/donation/'. $campaign->id .'/create') }}" class="btn btn-primary btn-lg btn-block">Donasi Sekarang</a>
                     </div>
         
-                    <h4 class="font-weight-bold">Donatur ({{ $campaign->donations->count() }})</h4>
+                    <h4 class="font-weight-bold">Donatur ({{ $campaign->donations->where('status', 'confirmed')->count() }})</h4>
                     <ul class="nav nav-pills mb-3 daftar-donasi" id="pills-tab" role="tablist">
                         <li class="nav-item">
                             <a class="nav-link active" id="pills-waktu-tab" data-toggle="pill" href="#pills-waktu"
@@ -99,7 +99,11 @@
                             aria-labelledby="pills-waktu-tab">
                             @forelse ($campaign->donations->where('status', 'confirmed')->sortBy('created_at')->load('user') as $key => $item)
                             <div @if ($key > 0) class="mt-1" @endif>
+                                @if ($item->anonim)
+                                <p class="font-weight-bold mb-0">{{ sembunyikan_text($item->user->name, 3) }}</p>
+                                @else
                                 <p class="font-weight-bold mb-0">{{ $item->user->name }}</p>
+                                @endif
                                 <p class="font-weight-bold mb-0">Rp. {{ format_uang($item->nominal) }}</p>
                                 <p class="text-muted mb-0">{{ tanggal_indonesia($item->created_at) }}</p>
                             </div>
@@ -111,7 +115,11 @@
                             aria-labelledby="pills-jumlah-tab">
                             @forelse ($campaign->donations->where('status', 'confirmed')->sortBy('nominal')->load('user') as $key => $item)
                             <div @if ($key > 0) class="mt-1" @endif>
+                                @if ($item->anonim)
+                                <p class="font-weight-bold mb-0">{{ sembunyikan_text($item->user->name, 3) }}</p>
+                                @else
                                 <p class="font-weight-bold mb-0">{{ $item->user->name }}</p>
+                                @endif
                                 <p class="font-weight-bold mb-0">Rp. {{ format_uang($item->nominal) }}</p>
                                 <p class="text-muted mb-0">{{ tanggal_indonesia($item->created_at) }}</p>
                             </div>

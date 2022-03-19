@@ -32,24 +32,27 @@ class PaymentController extends Controller
         $donation = Donation::where('order_number', $order_number)->first();
         $payment  = Payment::where('order_number', $order_number)->first() ?? new Payment();
         $bank = Bank::all()->pluck('name', 'id');
-        
-        if (! $donation) {
+        $mainAccount = $donation->user->mainAccount() ?? new Bank();
+
+        if (! $donation || $donation->user_id != auth()->id()) {
             abort(404);
         }
 
-        return view('front.donation.payment_confirmation', compact('campaign', 'donation', 'payment', 'bank'));
+        return view('front.donation.payment_confirmation', compact('campaign', 'donation', 'payment', 'bank', 'mainAccount'));
     }
 
     public function store(Request $request, $id, $order_number)
     {
-        $payment  = Payment::where('order_number', $order_number)->first();
+        $payment  = Payment::where('order_number', $order_number)->first() ?? new Payment();
 
         $validated = Validator::make($request->all(), [
             'name' => 'required',
-            'nominal' => 'required|integer|min:500',
+            'nominal' => 'required|regex:/^[0-9.]+$/|min:4',
             'bank_id' => 'required|exists:bank,id',
             'path_image' => $payment ? 'nullable|mimes:png,jpg,jpeg,pdf|max:2048' : 'required|mimes:png,jpg,jpeg,pdf|max:2048',
             'note' => 'nullable'
+        ], [
+            'nominal.min' => 'Nominal minimal 1.000'
         ]);
 
         if ($validated->fails()) {
@@ -72,9 +75,11 @@ class PaymentController extends Controller
                 ]);
         }
 
-        $data = $request->except('path_image');
-        $data['user_id'] = $campaign->user_id;
+        $data = $request->except('path_image', 'nominal');
+        $data['user_id'] = $donation->user_id;
         $data['order_number'] = $donation->order_number;
+        $data['nominal'] = str_replace('.', '', $request->nominal);
+        
         if ($request->has('path_image')) {
             if (Storage::disk('public')->exists($payment->path_image)) {
                 Storage::disk('public')->delete($payment->path_image);

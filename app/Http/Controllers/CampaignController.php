@@ -63,7 +63,7 @@ class CampaignController extends Controller
 
                 if (auth()->user()->hasRole('donatur')) {
                     $text .= '
-                        <a href="'. route('campaign.edit', $query->id) .'" class="btn btn-link text-primary"><i class="fas fa-pencil-alt"></i></a>
+                        <a href="'. url('/campaign/'. $query->id .'/edit') .'" class="btn btn-link text-primary"><i class="fas fa-pencil-alt"></i></a>
                     ';
                 } else {
                     $text .= '
@@ -97,7 +97,7 @@ class CampaignController extends Controller
             'body' => 'required|min:8',
             'publish_date' => 'required|date_format:Y-m-d H:i',
             'status' => 'required|in:publish,archived',
-            'goal' => 'required|integer|min:100000',
+            'goal' => 'required|regex:/^[0-9.]+$/|min:7',
             'end_date' => 'required|date_format:Y-m-d H:i',
             'note' => 'nullable',
             'receiver' => 'required',
@@ -108,7 +108,9 @@ class CampaignController extends Controller
             $rules['status'] = 'nullable';
         }
 
-        $validator = Validator::make($request->all(), $rules);
+        $validator = Validator::make($request->all(), $rules, [
+            'goal.min' => 'Nominal minimal 100.000'
+        ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
@@ -116,6 +118,7 @@ class CampaignController extends Controller
 
         $data = $request->except('path_image', 'categories');
         $data['slug'] = Str::slug($request->title);
+        $data['goal'] = str_replace('.', '', $request->goal);
         $data['path_image'] = upload('campaign', $request->file('path_image'), 'campaign');
         $data['user_id'] = auth()->id();
 
@@ -145,6 +148,7 @@ class CampaignController extends Controller
 
         $campaign->publish_date = date('Y-m-d H:i', strtotime($campaign->publish_date));
         $campaign->end_date = date('Y-m-d H:i', strtotime($campaign->end_date));
+        $campaign->goal = format_uang($campaign->goal);
         $campaign->categories = $campaign->category_campaign;
         $campaign->path_image = Storage::disk('public')->url($campaign->path_image);
 
@@ -167,7 +171,7 @@ class CampaignController extends Controller
             'body' => 'required|min:8',
             'publish_date' => 'required|date_format:Y-m-d H:i',
             'status' => 'required|in:publish,archived',
-            'goal' => 'required|integer|min:100000',
+            'goal' => 'required|regex:/^[0-9.]+$/|min:7',
             'end_date' => 'required|date_format:Y-m-d H:i',
             'note' => 'nullable',
             'receiver' => 'required',
@@ -178,7 +182,9 @@ class CampaignController extends Controller
             $rules['status'] = 'nullable';
         }
 
-        $validator = Validator::make($request->all(), $rules);
+        $validator = Validator::make($request->all(), $rules, [
+            'goal.min' => 'Nominal minimal 100.000'
+        ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
@@ -186,6 +192,7 @@ class CampaignController extends Controller
 
         $data = $request->except('path_image', 'categories');
         $data['slug'] = Str::slug($request->title);
+        $data['goal'] = str_replace('.', '', $request->goal);
 
         if ($request->hasFile('path_image')) {
             if (Storage::disk('public')->exists($campaign->path_image)) {

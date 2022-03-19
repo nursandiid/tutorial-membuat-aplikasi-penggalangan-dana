@@ -25,6 +25,17 @@
                     </div>
                 </div>
 
+                @if ($campaign->goal == $campaign->donations->sum('nominal'))
+                    <div class="alert alert-light border-danger text-danger">
+                        <i class="fas fa-info-circle"></i> 
+                        Projek sudah mencapai goal, apakah yakin ingin tetap berdonasi pada untuk projek terpilih.
+
+                        <button type="button" class="close text-danger" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                @endif
+
                 <div class="card mt-3">
                     @csrf
 
@@ -32,7 +43,7 @@
                         <div class="bg-light rounded d-flex align-items-center p-3">
                             <h1 class="font-weight-bold w-25">Rp.</h1>
                             <div class="form-group w-75">
-                                <input type="number" class="form-control @error('nominal') is-invalid @enderror" name="nominal" placeholder="Masukan nominal donasi" value="{{ old('nominal') ?? 0 }}">
+                                <input type="text" class="form-control @error('nominal') is-invalid @enderror" name="nominal" placeholder="Masukan nominal donasi" value="{{ old('nominal') }}" onkeyup="format_uang(this)">
                                 @error('nominal')
                                 <div class="invalid-feedback">
                                     {{ $message }}

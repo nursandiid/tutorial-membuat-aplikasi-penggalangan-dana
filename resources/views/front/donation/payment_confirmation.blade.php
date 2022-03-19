@@ -9,6 +9,7 @@
             <h5 class="text-center">Konfirmasi Pembayaran</h5>
             <div class="detail text-center mt-3 mt-lg-4">
                 <p>ID Transaksi #{{ $donation->order_number }}</p>
+                <p class="badge badge-{{ $donation->statusColor() }}">{{ $donation->statusText() }}</p>
             </div>
 
             <form action="{{ url('/donation/'. $campaign->id .'/payment-confirmation/'. $donation->order_number) }}" method="post" class="mt-3 mt-lg-4" enctype="multipart/form-data">
@@ -36,7 +37,17 @@
                     <select name="bank_id" id="bank_id" class="form-control @error('bank_id') is-invalid @enderror">
                         <option disabled selected>Pilih bank</option>
                         @foreach ($bank as $key => $item)
-                            <option value="{{ $key }}" {{ old('bank_id') == $key ? 'selected' : ($payment->bank_id == $key ? 'selected' : '') }}>{{ $item }}</option>
+                            <option value="{{ $key }}" {{ 
+                                old('bank_id') == $key 
+                                ? 'selected' 
+                                : ($payment->bank_id == $key 
+                                    ? 'selected' 
+                                    : ($mainAccount && $mainAccount->pivot->bank_id == $key
+                                        ? 'selected'
+                                        : ''
+                                    )
+                                ) 
+                            }}>{{ $item }}</option>
                         @endforeach
                     </select>
                     @error('bank_id')

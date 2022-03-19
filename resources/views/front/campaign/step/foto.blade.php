@@ -7,7 +7,7 @@
     </div>
     <small class="text-muted d-block">Format foto harus: (jpg, png, jpeg)</small>
     @if (isset($campaign) && Storage::disk('public')->exists($campaign->path_image))
-        <img src="{{ Storage::disk('public')->url($campaign->path_image) }}" class="w-50" alt="...">
+        <img src="{{ Storage::disk('public')->url($campaign->path_image) }}" class="img-thumbnail w-50" alt="...">
     @else
         <img src="" class="img-thumbnail preview-path_image w-50" style="display: none;">
     @endif
