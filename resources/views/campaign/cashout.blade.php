@@ -83,19 +83,28 @@
     </div>
 
     <div class="col-lg-5">
-        <h3 class="text-primary">Yang bisa dicairkan: Rp. {{ format_uang($campaign->nominal) }}</h3>
+        <h3 class="text-primary">Yang bisa dicairkan: Rp. {{ format_uang($campaign->nominal - $campaign->cashouts->whereIn('status', ['success', 'pending'])->sum('cashout_amount')) }}</h3>
+        @if ($campaign->cashouts->whereIn('status', ['success', 'pending'])->sum('cashout_amount') > 0)
+            @if ($campaign->cashout_latest->status == 'success')
+            <h5 class="d-block text-{{ $campaign->cashout_latest->statusColor() }}">Sebelumnya Anda telah mencairkan sebesar Rp. {{ format_uang($campaign->cashout_latest->cashout_amount) }}</h5>
+            <p>Terakhir dibuat pada {{ tanggal_indonesia($campaign->cashout_latest->created_at) }} {{ date('H:i', strtotime($campaign->cashout_latest->created_at)) }}</p>
+            @elseif ($campaign->cashout_latest->status == 'pending')
+            <h5 class="d-block text-{{ $campaign->cashout_latest->statusColor() }}">Admin sedang meninjau permintaan pengajuan pencairan Anda sebelumnya, sebesar Rp. {{ format_uang($campaign->cashout_latest->cashout_amount) }}</h5>
+            <p>Terakhir dibuat pada {{ tanggal_indonesia($campaign->cashout_latest->created_at) }} {{ date('H:i', strtotime($campaign->cashout_latest->created_at)) }}</p>
+            @endif
+        @endif
         <div class="alert alert-light border-primary">
             Disarankan untuk melakukan pencairan dana pada jam kerja normal (Senin-Jumat 08.00-20.00) untuk menghindari transaksi pending dikarenakan terkena cut off time dari bank yang bersangkutan.
         </div>
 
         <x-card>
-            <form action="" method="post" class="form-pencairan" onsubmit="reviewCashout()">
+            <form action="{{ route('campaign.cashout.store', $campaign->id) }}" method="post" class="form-pencairan" onsubmit="reviewCashout()">
                 @csrf
 
                 <input type="hidden" name="campaign_id" value="{{ $campaign->id }}">
                 <input type="hidden" name="user_id" value="{{ $campaign->user_id }}">
                 <input type="hidden" name="bank_id" value="{{ $bank->id ?? '' }}">
-                <input type="hidden" name="total" value="{{ $campaign->nominal }}">
+                <input type="hidden" name="total" value="{{ $campaign->nominal - $campaign->cashouts->whereIn('status', ['success', 'pending'])->sum('cashout_amount') }}">
 
                 <div class="form-group">
                     <label for="cashout_amount">Jumlah yang ingin dicairkan: <span class="text-danger">*</span></label>
@@ -252,21 +261,21 @@
         $('.sisa-saldo').text(remaining_amount.val());
     }
 
-    function submitForm(originalForm) {
-        $.post({
-                url: $(originalForm).attr('action'),
-                data: new FormData(originalForm),
-                dataType: 'json',
-                contentType: false,
-                cache: false,
-                processData: false
-            })
+    function submitForm() {
+        const originalForm = '.form-pencairan';
+        $.post($(originalForm).attr('action'), $(originalForm).serialize())
             .done(response => {
                 $(modal).modal('hide');
                 showAlert(response.message, 'success');
-                $('.card-footer').remove();
+                resetForm(originalForm);
+
+                setTimeout(() => {
+                    location.reload();
+                }, 3000);
             })
             .fail(errors => {
+                $(modal).modal('hide');
+                
                 if (errors.status == 422) {
                     loopErrors(errors.responseJSON.errors);
                     return;

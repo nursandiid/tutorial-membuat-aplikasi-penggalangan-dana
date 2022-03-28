@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Campaign;
+use App\Models\Cashout;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -257,5 +258,37 @@ class CampaignController extends Controller
         }
 
         return view('campaign.cashout', compact('campaign'));
+    }
+
+    public function cashoutStore(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'campaign_id' => 'required|exists:campaigns,id',
+            'user_id' => 'required|exists:users,id',
+            'bank_id' => 'required|exists:bank,id',
+            'total' => 'required|integer',
+            'cashout_amount' => 'required|regex:/^[0-9.]+$/',
+            'cashout_fee' => 'required|regex:/^[0-9.]+$/',
+            'amount_received' => 'required|regex:/^[0-9.]+$/',
+            'remaining_amount' => 'required|regex:/^[0-9.]+$/'
+        ], [
+            'bank_id.required' => 'Silahkan lengkapi rekening tujuan terlebih dahulu.'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $attributes = $request->only('campaign_id', 'user_id', 'bank_id', 'total');
+        $attributes['status'] = 'pending';
+        foreach ($request->only('cashout_amount', 'cashout_fee', 'amount_received', 'remaining_amount') as $key => $value) {
+            $attributes[$key] = str_replace('.', '', $value);
+        }
+
+        $cashout = Cashout::create($attributes);
+        return response()->json([
+            'data' => $cashout,
+            'message' => 'Cashout berhasil dikirimkan, silahkan konfirmasi Admin untuk segera memproses request Anda.'
+        ]);
     }
 }

@@ -91,7 +91,7 @@
                 <a href="{{ route('campaign.cashout', $campaign->id) }}" class="btn btn-success btn-lg btn-block">Cairkan Sekarang</a>
             </div>
 
-            <h4 class="font-weight-bold">Donatur ({{ $campaign->donations->count() }})</h4>
+            <h4 class="font-weight-bold">Donatur ({{ $campaign->donations->where('status', 'confirmed')->count() }})</h4>
             <ul class="nav nav-pills mb-3 daftar-donasi" id="pills-tab" role="tablist">
                 <li class="nav-item">
                     <a class="nav-link active" id="pills-waktu-tab" data-toggle="pill" href="#pills-waktu"

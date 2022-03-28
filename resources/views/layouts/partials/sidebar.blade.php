@@ -80,6 +80,14 @@
                         </p>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="{{ route('cashout.index') }}" class="nav-link {{ request()->is('admin/cashout*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-hand-holding-usd"></i>
+                        <p>
+                            Daftar Pencairan
+                        </p>
+                    </a>
+                </li>
                 @endif
 
                 @if (auth()->user()->hasRole('admin'))

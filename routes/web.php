@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\{
     CampaignController,
+    CashoutController,
     CategoryController,
     ContactController,
     DashboardController,
@@ -39,7 +40,9 @@ Route::get('/contact', [FrontContactController::class, 'index']);
 Route::post('/contact', [FrontContactController::class, 'store']);
 Route::get('/about', [AboutController::class, 'index']);
 Route::post('/subscriber', [FrontSubcriberController::class, 'store']);
-Route::resource('/campaign', FrontCampaignController::class)->only('index', 'create', 'edit');
+Route::resource('/campaign', FrontCampaignController::class)
+    ->only('index', 'create', 'edit')
+    ->middleware(['auth', 'role:admin,donatur']);
 Route::get('/donation', [FrontDonationController::class, 'index']);
 Route::get('/donation/{id}', [FrontDonationController::class, 'show']);
 Route::group([
@@ -89,11 +92,16 @@ Route::group([
 
     Route::get('/campaign/{id}/cashout', [CampaignController::class, 'cashout'])
         ->name('campaign.cashout');
-    
+    Route::post('/campaign/{id}/cashout', [CampaignController::class, 'cashoutStore'])
+        ->name('campaign.cashout.store');
 
     Route::get('/donation/data', [DonationController::class, 'data'])
         ->name('donation.data');
     Route::resource('/donation', DonationController::class);
+
+    Route::get('/cashout/data', [CashoutController::class, 'data'])
+        ->name('cashout.data');
+    Route::resource('/cashout', CashoutController::class);
 
     Route::group([
         'middleware' => 'role:admin'
