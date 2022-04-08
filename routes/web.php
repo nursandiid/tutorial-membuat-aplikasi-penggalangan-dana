@@ -118,7 +118,7 @@ Route::group([
             ->name('subscriber.data');
         Route::resource('/subscriber', SubscriberController::class)->only('index', 'destroy');
 
-        Route::get('/report/data', [ReportController::class, 'data'])->name('report.data');
+        Route::get('/report/data/{start}/{end}', [ReportController::class, 'data'])->name('report.data');
         Route::get('/report', [ReportController::class, 'index'])->name('report.index');
     });
 });
