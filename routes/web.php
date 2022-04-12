@@ -118,7 +118,9 @@ Route::group([
             ->name('subscriber.data');
         Route::resource('/subscriber', SubscriberController::class)->only('index', 'destroy');
 
-        Route::get('/report/data/{start}/{end}', [ReportController::class, 'data'])->name('report.data');
         Route::get('/report', [ReportController::class, 'index'])->name('report.index');
+        Route::get('/report/data/{start}/{end}', [ReportController::class, 'data'])->name('report.data');
+        Route::get('/report/pdf/{start}/{end}', [ReportController::class, 'exportPDF'])->name('report.export_pdf');
+        Route::get('/report/excel/{start}/{end}', [ReportController::class, 'exportExcel'])->name('report.export_excel');
     });
 });

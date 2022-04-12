@@ -13,8 +13,8 @@
             <x-slot name="header">
                 <div class="btn-group">
                     <button data-toggle="modal" data-target="#modal-form" class="btn btn-primary"><i class="fas fa-pencil-alt"></i> Ubah Periode</button>
-                    <a href="{{ route('category.create') }}" class="btn btn-danger"><i class="fas fa-file-pdf"></i> Export PDF</a>
-                    <a href="{{ route('category.create') }}" class="btn btn-success"><i class="fas fa-file-excel"></i> Export Excel</a>
+                    <a target="_blank" href="{{ route('report.export_pdf', compact('start', 'end')) }}" class="btn btn-danger"><i class="fas fa-file-pdf"></i> Export PDF</a>
+                    <a target="_blank" href="{{ route('report.export_excel', compact('start', 'end')) }}" class="btn btn-success"><i class="fas fa-file-excel"></i> Export Excel</a>
                 </div>
             </x-slot>
 
