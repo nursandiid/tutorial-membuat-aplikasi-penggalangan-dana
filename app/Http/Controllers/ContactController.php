@@ -17,9 +17,12 @@ class ContactController extends Controller
         return view('contact.index');
     }
 
-    public function data()
+    public function data(Request $request)
     {
-        $query = Contact::orderBy('name');
+        $query = Contact::when($request->has('date') && $request->date != "", function ($query) use ($request) {
+                $query->whereDate('created_at', $request->date);
+            })
+            ->orderBy('name');
 
         return datatables($query)
             ->addIndexColumn()

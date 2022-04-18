@@ -42,7 +42,7 @@
         processing: true,
         autoWidth: false,
         ajax: {
-            url: '{{ route('donation.data') }}'
+            url: '{{ route('donation.data', ['status' => request('status')]) }}'
         },
         columns: [
             {data: 'DT_RowIndex', searchable: false, sortable: false},

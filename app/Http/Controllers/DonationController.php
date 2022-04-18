@@ -13,11 +13,14 @@ class DonationController extends Controller
         return view('donation.index');
     }
 
-    public function data()
+    public function data(Request $request)
     {
         $query = Donation::with('campaign','user', 'payment')
             ->when(auth()->user()->hasRole('donatur'), function ($query) {
                 $query->donatur();
+            })
+            ->when($request->has('status') && $request->status != "", function ($query) use ($request) {
+                $query->where('status', $request->status);
             })
             ->orderBy('created_at');
 

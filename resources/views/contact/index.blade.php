@@ -38,7 +38,7 @@
         processing: true,
         autoWidth: false,
         ajax: {
-            url: '{{ route('contact.data') }}'
+            url: '{{ route('contact.data', ['date' => request('date')]) }}'
         },
         columns: [
             {data: 'DT_RowIndex', searchable: false, sortable: false},

@@ -45,7 +45,7 @@
         processing: true,
         autoWidth: false,
         ajax: {
-            url: '{{ route('donatur.data') }}'
+            url: '{{ route('donatur.data', ['email' => request('email')]) }}'
         },
         columns: [
             {data: 'DT_RowIndex', searchable: false, sortable: false},
