@@ -32,20 +32,27 @@
         <li class="nav-item dropdown">
             <a class="nav-link" data-toggle="dropdown" href="#">
                 <i class="far fa-bell"></i>
-                <span class="badge badge-danger navbar-badge">15</span>
+                <span class="badge badge-danger navbar-badge">{{ $countNotifikasi }}</span>
             </a>
             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right overflow-hidden">
-                <span class="dropdown-item dropdown-header">15 Notifikasi</span>
+                <span class="dropdown-item dropdown-header">{{ $countNotifikasi }} Notifikasi</span>
+                @foreach ($listNotifikasi as $key => $notifikasi)
+                @if ($notifikasi)
                 <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item">
-                    <i class="fas fa-envelope mr-2"></i> 4 pesan baru
-                    <span class="float-right text-muted text-sm">3 mins</span>
+                <a href="{{ route("$key.index") }}" class="dropdown-item">
+                    <i class="fas 
+                    @switch($key)
+                        @case('donatur') fa-user-plus text-warning @break
+                        @case('subscriber') fa-user-plus text-secondary @break
+                        @case('contact') fa-envelope text-info @break
+                        @case('donation') fa-donate text-primary @break
+                        @case('cashout') fa-hand-holding-usd text-success @break
+                    @endswitch
+                    mr-2"></i> {{ $notifikasi->$key }} {{ $key }} baru
+                    <span class="text-muted text-sm d-block">{{ now()->parse($notifikasi->created_at)->diffForhumans() }}</span>
                 </a>
-                <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item">
-                    <i class="fas fa-users mr-2"></i> 8 user baru
-                    <span class="float-right text-muted text-sm">12 hours</span>
-                </a>
+                @endif
+                @endforeach
             </div>
         </li>
         <li class="nav-item">

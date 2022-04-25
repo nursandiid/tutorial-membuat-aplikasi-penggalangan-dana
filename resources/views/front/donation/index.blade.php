@@ -39,6 +39,14 @@
         background: var(--primary);
         border-color: var(--primary);
     }
+    .card-body2 {
+        min-height: 10rem;
+    }
+    @media (max-width: 575.98px) {
+        .card-body2 {
+            min-height: auto;
+        }
+    }
 </style>
 @endpush
 
@@ -86,9 +94,13 @@
                             <p class="mb-0">Goal: <strong>{{ format_uang($item->goal) }}</strong></p>
                         </div>
                     </div>
-                    <div class="card-body p-2 border-top">
+                    <div class="card-body card-body2 p-2 border-top">
                         <a href="{{ url('/donation/'. $item->id) }}" class="card-title text-dark mb-3">{{ $item->title }}</a>
+                        @if (Str::length($item->short_description) > 0)
                         <p class="card-text">{{ Str::limit($item->short_description, 100, ' ...') }}</p>
+                        @else
+                        <p class="card-text">Deskripsi tidak tersedia.</p>
+                        @endif
                     </div>
                     <div class="card-footer p-2">
                         <a href="{{ url('/donation/'. $item->id .'/create') }}" class="btn btn-primary d-block rounded">

@@ -24,6 +24,7 @@ class DonationController extends Controller
                     $query->whereIn('category_id', $request->categories);
                 });
             })
+            ->where('status', 'publish')
             ->orderBy('publish_date', 'desc')
             ->paginate(9)
             ->withQueryString();
