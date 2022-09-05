@@ -2,11 +2,13 @@
 
 namespace App\Actions\Fortify;
 
+use App\Mail\RegistrationSuccess;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 use Laravel\Jetstream\Jetstream;
+use Illuminate\Support\Facades\Mail;
 
 class CreateNewUser implements CreatesNewUsers
 {
@@ -27,11 +29,19 @@ class CreateNewUser implements CreatesNewUsers
             'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['required', 'accepted'] : '',
         ])->validate();
 
-        return User::create([
-            'name' => $input['name'],
-            'email' => $input['email'],
-            'password' => Hash::make($input['password']),
-            'role_id' => 2
-        ]);
+        try {
+            $user = User::create([
+                'name' => $input['name'],
+                'email' => $input['email'],
+                'password' => Hash::make($input['password']),
+                'role_id' => 2
+            ]);
+
+            Mail::to($user)->send(new RegistrationSuccess($user));
+
+            return $user;
+        } catch (\Exception $e) {
+            return $e;
+        }
     }
 }

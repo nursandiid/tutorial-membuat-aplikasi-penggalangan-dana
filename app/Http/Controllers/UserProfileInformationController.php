@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Bank;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class UserProfileInformationController extends Controller
@@ -24,5 +25,22 @@ class UserProfileInformationController extends Controller
             'message' => 'Bank terdaftar berhasil dihapus',
             'success' => true
         ]);
+    }
+
+    public function email_verification($id, $token)
+    {
+        $user = User::find($id);
+        if ($user) {
+            if ($user->email_verified_at) {
+                return "Email sudah diverifikasi";
+            }
+
+            $user->update([
+                'email_verified_at' => now(),
+                'remember_token' => $token
+            ]);
+        }
+
+        return "Email berhasil diverifikasi";
     }
 }

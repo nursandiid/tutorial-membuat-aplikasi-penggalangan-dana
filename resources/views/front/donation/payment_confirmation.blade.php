@@ -42,7 +42,7 @@
                                 ? 'selected' 
                                 : ($payment->bank_id == $key 
                                     ? 'selected' 
-                                    : ($mainAccount && $mainAccount->pivot->bank_id == $key
+                                    : ($mainAccount && $mainAccount->pivot && $mainAccount->pivot->bank_id == $key
                                         ? 'selected'
                                         : ''
                                     )

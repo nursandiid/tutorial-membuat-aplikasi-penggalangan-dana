@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
+use App\Mail\PaymentSuccess;
 use App\Models\Bank;
 use App\Models\Campaign;
 use App\Models\Donation;
 use App\Models\Payment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -92,6 +94,8 @@ class PaymentController extends Controller
             ['order_number' => $donation->order_number],
             $data
         );
+
+        Mail::to($donation->user)->send(new PaymentSuccess($donation));
 
         return back()
             ->with([

@@ -124,3 +124,11 @@ Route::group([
         Route::get('/report/excel/{start}/{end}', [ReportController::class, 'exportExcel'])->name('report.export_excel');
     });
 });
+
+Route::get('payment_confirmed', function () {
+    $donation = \App\Models\Donation::find(13);
+    
+    return view('mail.payment_confirmed', compact('donation'));
+});
+
+Route::get('/user/{id}/{token}', [UserProfileInformationController::class, 'email_verification']);

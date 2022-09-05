@@ -1,6 +1,6 @@
 @extends('layouts.front')
 
-@section('title', $campaign->user->name)
+@section('title', $donation->user->name)
 
 @push('css')
 <style>
@@ -22,7 +22,7 @@
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-lg-10">
-            <h5 class="text-center">Terimakasih {{ $campaign->user->name }}</h5>
+            <h5 class="text-center">Terimakasih {{ $donation->user->name }}</h5>
             <div class="detail d-flex justify-content-around align-items-center text-center mt-3 mt-lg-4">
                 <p>ID Transaksi #{{ $donation->order_number }}</p>
                 <p>Total Tagihan <strong>Rp. {{ format_uang($donation->nominal) }}</strong></p>

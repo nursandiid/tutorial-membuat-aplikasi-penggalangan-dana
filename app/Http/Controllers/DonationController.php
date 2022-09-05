@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\PaymentConfirmed;
 use App\Models\Donation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class DonationController extends Controller
@@ -99,6 +101,8 @@ class DonationController extends Controller
         } elseif ($request->status == 'canceled') {
             $statusText = 'dibatalkan';
         }
+
+        Mail::to($donation->user)->send(new PaymentConfirmed($donation));
 
         return response()->json(['data' => $donation, 'message' => 'Donasi berhasil '. $statusText]);
     }

@@ -3,11 +3,14 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
+use App\Mail\PaymentConfirmation;
+use App\Models\Bank;
 use App\Models\Campaign;
 use App\Models\Category;
 use App\Models\Donation;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class DonationController extends Controller
@@ -77,6 +80,10 @@ class DonationController extends Controller
             'order_number' => 'PX'. mt_rand(000000, 999999),
             'status' => 'not confirmed'
         ]);
+
+        $bank = Bank::all();
+
+        Mail::to($donation->user)->send(new PaymentConfirmation($campaign, $donation, $bank));
 
         return redirect('/donation/'. $campaign->id .'/payment/'. $donation->order_number)
             ->with([
